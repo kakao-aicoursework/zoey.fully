@@ -1,45 +1,107 @@
+import time
 import pynecone as pc
+from pynecone.base import Base
+
+class Message(Base):
+    text: str
+    # bot_text: str
+    # created_at: str
+    # to_lang: str
+
 
 class State(pc.State):
-    user_message: str = ""  # 사용자 입력을 저장할 상태 변수
-    chat_history: list = []  # 채팅 내역을 저장할 상태 변수
+    text: str = ""  # 사용자 입력을 저장할 상태 변수
+    input_disabled: bool = False  # 입력 상자 활성화 상태를 저장할 변수
+    messages: list[Message] = []
+    
 
-    # 더미 챗봇 함수
-    def get_bot_response(self):
-        return "hello world"
+    @pc.var
+    def output(self) -> str:
+
+        time.sleep(0.5)
+        if not str(self.text).strip():
+            return "Translations will appear here."
+
+        o_text = str(self.text) + "hello world"
+        return o_text
 
     # 메시지 전송 함수
     def send_message(self):
-        self.chat_history.append(f"You: {self.user_message}")
-        bot_response = self.get_bot_response()
-        self.chat_history.append(f"Bot: {bot_response}")
-        self.user_message = ""
+        new_message = Message(
+            text=self.text
+        )
+        self.messages.append(new_message)
 
-    # 사용자 메시지 상태 업데이트
-    def set_user_message(self, new_text):
-        self.user_message = new_text
+        # self.update_bot_message()
 
-def message(item):
-    return pc.text(item)
+    # 메시지 전송 함수
+    def update_bot_message(self):
+        # 먼저 사용자 메시지만 보여주기 위해 임시 bot_text로 빈 문자열을 설정합니다.
+        new_message = Message(
+            text=self.output
+        )
+        self.messages.append(new_message)
+        
+
+
+def text_box(text):
+    return pc.text(
+        text,
+        background_color="#fff",
+        padding="1rem",
+        border_radius="8px",
+    )
+
+def message(message):
+    return pc.box(
+        pc.vstack(
+            text_box(message.text),
+            # down_arrow(),
+            # text_box(message.bot_text),
+         
+            # spacing="0.3rem",
+            # align_items="left",
+        ),
+        background_color="blue",
+        padding="1rem",
+        border_radius="8px",
+    )
 
 def index():
     return pc.container(
         pc.vstack(
-            pc.foreach(State.chat_history, message),  # 채팅 내역 출력
+            # 채팅 내역 출력을 위한 스크롤 가능한 영역 설정
+            pc.box(
+                pc.foreach(State.messages, message),
+                overflow="auto",  # 스크롤 적용
+                max_height="400px"  # 최대 높이 설정
+            ),
+            # 사용자 입력 영역
             pc.hstack(
                 pc.input(
                     placeholder="Your message",
-                    value=State.user_message,
-                    on_input=State.user_message  # 사용자가 입력할 때 호출되는 함수
+                    on_blur=State.set_text
                 ),
-                pc.button("Send", on_click=State.send_message)  # "Send" 버튼 클릭 시 send_message 함수 호출
+                pc.button("Send", on_click=State.send_message),
+                pc.button("gpt", on_click=State.update_bot_message)
             )
         ),
         padding="2rem",
         background_color="skyblue",  # 박스의 배경색을 하늘색으로 설정
         max_width="600px",
-        margin="auto"  # 화면 중앙에 위치
+        margin="auto",  # 화면 중앙에 위치
+        min_height="600px"  # 최대 높이 설정
+        # position="absolute",  # 중앙 정렬을 위한 설정
+    
+
+        # max_width="600px",
+        # margin="auto",
+        # position="absolute",  # 중앙 정렬을 위해 position을 absolute로 설정
+        # top="50%",  # 상위 요소 대비 50% 위치
+        # left="50%",  # 상위 요소 대비 50% 위치
+        # transform="translate(-50%, -50%)"  # 자기 자신의 크기에 대한 50%만큼 이동하여 중앙에 배치
     )
+
 
 # 앱 설정 및 컴파일
 app = pc.App(state=State)
