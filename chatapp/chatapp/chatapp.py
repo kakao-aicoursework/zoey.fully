@@ -7,6 +7,7 @@ from rxconfig import config
 import reflex as rx
 from chatapp import style
 
+
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
 filename = f"{config.app_name}/{config.app_name}.py"
 
