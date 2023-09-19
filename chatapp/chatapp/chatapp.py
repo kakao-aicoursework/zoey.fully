@@ -32,8 +32,8 @@ def chat() -> rx.Component:
             State.chat_history,
             lambda messages: qa(messages[0], messages[1]),
         ),
-        height="800px",
-        weight="800px",
+        height="600px",
+        # weight="100%",
         overflow="auto",  # 스크롤 적용
     )
 
@@ -42,12 +42,12 @@ def action_bar() -> rx.Component:
     return rx.hstack(
         rx.input(
             value=State.question,
-            placeholder="Ask a question",
+            placeholder="질문을 입력하세요.",
             on_change=State.set_question,
             style=style.input_style,
         ),
         rx.button(
-            "Ask",
+            "전송",
             on_click=State.answer,
             style=style.button_style,
         ),
@@ -55,14 +55,15 @@ def action_bar() -> rx.Component:
 
 
 def index() -> rx.Component:
-    return rx.container(
+    return rx.center(
         rx.vstack(
+            rx.heading("gpt chatbot", font_size="2em"),
             chat(),
             action_bar(),
             border_radius="15px",
             border_width="thick",
-            background_color="skyblue",
-            # width="80%",
+            background_color="#F5F5F5",
+            width="80%",
             padding="5%",
 
         ),
