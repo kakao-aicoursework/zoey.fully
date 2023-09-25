@@ -1,27 +1,22 @@
-# chatapp.py
+import pynecone as rx
 
-from gpt_project.state import State
+# from chatapp import style
+from .state import State
 
-from rxconfig import config
-
-import reflex as rx
-from gpt_project import style
-
-docs_url = "https://reflex.dev/docs/getting-started/introduction"
-filename = f"{config.app_name}/{config.app_name}.py"
 
 def qa(question: str, answer: str) -> rx.Component:
     return rx.box(
         rx.box(
-            rx.text(question, style=style.question_style),
-            text_align="right",
+            rx.text(question, text_align="right"),
+            # style=style.question_style,
         ),
         rx.box(
-            rx.text(answer, style=style.answer_style),
-            text_align="left",
+            rx.text(answer, text_align="left"),
+            # style=style.answer_style,
         ),
         margin_y="1em",
     )
+
 
 def chat() -> rx.Component:
     return rx.box(
@@ -31,20 +26,23 @@ def chat() -> rx.Component:
         )
     )
 
+
 def action_bar() -> rx.Component:
     return rx.hstack(
         rx.input(
-            value=State.question,
+            value=ChatappState.question,
             placeholder="Ask a question",
-            on_change=State.set_question,
-            style=style.input_style,
+            on_change=ChatappState.set_question,
+            # style=style.input_style,
         ),
         rx.button(
             "Ask",
             on_click=State.answer,
-            style=style.button_style,
+            # style=style.button_style,
         ),
     )
+
+
 def index() -> rx.Component:
     return rx.container(
         chat(),
@@ -52,7 +50,6 @@ def index() -> rx.Component:
     )
 
 
-# Add state and page to the app.
 app = rx.App()
 app.add_page(index)
 app.compile()

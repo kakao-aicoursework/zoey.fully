@@ -1,11 +1,11 @@
 # chatapp.py
 
-from gpt_project.state import State
+from chatapp.state import State
 
 from rxconfig import config
 
 import reflex as rx
-from gpt_project import style
+from chatapp import style
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
 filename = f"{config.app_name}/{config.app_name}.py"
