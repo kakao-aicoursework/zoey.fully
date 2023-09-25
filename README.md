@@ -30,4 +30,4 @@ reflex run
 ```
 
 ## 실행 예시
-![예시 이미지](/Users/kakao/project/study_code/zoey.fully/assets/images/gpt_example01.png)
+![예시 이미지](assets/images/gpt_example01.png)
